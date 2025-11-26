@@ -10,9 +10,9 @@ from transformers import pipeline
 
 import boto3
 bucket_name = "agnishpaul"
-local_path = '05-Sentiment_Classification/tinybert-sentiment-analysis'
+local_path = 'tinybert-disaster-tweet'
 
-s3_prefix = 'ml-models/tinybert-sentiment-analysis/'
+s3_prefix = 'ml-models/tinybert-disaster-tweet/'
 
 s3 = boto3.client('s3')
 def download_dir(local_path, s3_prefix):
@@ -29,7 +29,7 @@ def download_dir(local_path, s3_prefix):
                 s3.download_file(bucket_name, s3_key, local_file)
 
 
-st.title("Machine Learning Model Deployment at the Server!!!")
+st.title("Disaster Tweet Classification 🚨")
 
 button = st.button("Download Model")
 if button:
@@ -41,9 +41,10 @@ text = st.text_area("Enter Your Review", "Type...")
 predict = st.button("Predict")
 
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
-classifier = pipeline('text-classification', model='05-Sentiment_Classification/tinybert-sentiment-analysis', device=device)
+classifier = pipeline('text-classification', model='tinybert-disaster-tweet', device=device)
 if predict:
     with st.spinner("Predicting..."):
         output = classifier(text)
         st.write(output)
         # st.info(output)
+
