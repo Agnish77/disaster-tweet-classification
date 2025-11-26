@@ -10,11 +10,22 @@ from transformers import pipeline
 
 import boto3
 bucket_name = "agnishpaul"
+# Load AWS creds directly (do NOT set os.environ)
+AWS_ACCESS_KEY_ID = st.secrets["AWS_ACCESS_KEY_ID"]
+AWS_SECRET_ACCESS_KEY = st.secrets["AWS_SECRET_ACCESS_KEY"]
+AWS_DEFAULT_REGION = st.secrets["AWS_DEFAULT_REGION"]
 local_path = 'tinybert-disaster-tweet'
 
 s3_prefix = 'ml-models/tinybert-disaster-tweet/'
 
-s3 = boto3.client('s3')
+s3 = boto3.client(
+    "s3",
+    aws_access_key_id=AWS_ACCESS_KEY_ID,
+    aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+    region_name=AWS_DEFAULT_REGION,
+)
+
+
 def download_dir(local_path, s3_prefix):
     os.makedirs(local_path, exist_ok=True)
     paginator = s3.get_paginator('list_objects_v2')
